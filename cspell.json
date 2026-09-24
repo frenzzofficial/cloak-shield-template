@@ -1,0 +1,22 @@
+{
+	"version": "0.2",
+	"language": "en",
+	"words": [
+		"knip",
+		"biomejs",
+		"secretlint",
+		"commitlint",
+		"elysia",
+		"elysiajs",
+		"drizzle",
+		"jose",
+		"zod",
+		"vercel",
+		"cloak",
+		"stringbool",
+		"prettify",
+		"getaddrinfo",
+		"enotfound"
+	],
+	"ignorePaths": ["bun.lock", "dist", "coverage", "node_modules"]
+}
