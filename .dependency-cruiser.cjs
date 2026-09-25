@@ -10,10 +10,14 @@ module.exports = {
 		},
 		{
 			name: "env-is-a-leaf-layer",
-			comment: "env files may only depend on other env files",
+			comment:
+				"env files may only depend on other env files, plus the generic parse-env helper",
 			severity: "error",
 			from: { path: "^src/packages/env" },
-			to: { path: "^src/packages/(configs|middlewares|bootstrap|utils)" },
+			to: {
+				path: "^src/packages/(configs|middlewares|bootstrap|utils)",
+				pathNot: "^src/packages/utils/parse-env\\.ts$",
+			},
 		},
 		{
 			name: "configs-only-depend-on-env",

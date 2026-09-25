@@ -3,8 +3,34 @@
 // See: https://vercel.com/docs/frameworks/backend/elysia
 import { Elysia } from "elysia";
 
-import { createApp } from "@/app/main";
+// `createApp` is imported dynamically and wrapped in try/catch so that a bad environment
+// variable (a typo, a too-short APP_SECRET, a non-numeric PORT, ...) returns a normal JSON
+// 500 response instead of crashing the whole Bun process. A crashed process shows up in
+// Vercel as an opaque "FUNCTION_INVOCATION_FAILED" with no usable message; this makes the
+// real problem visible in the response body and in the logs.
+const buildApp = async (): Promise<Elysia> => {
+	try {
+		const { createApp } = await import("@/app/main");
+		// The two branches build structurally different Elysia instances (different routes,
+		// no shared generic shape), so returning `Elysia` requires one deliberate, visible
+		// widening cast through `unknown` rather than an `any`.
+		const realApp = new Elysia({ name: "vercel-entry" }).use(createApp());
+		// type-coverage:ignore-next-line
+		return realApp as unknown as Elysia;
+	} catch (thrown: unknown) {
+		const message = thrown instanceof Error ? thrown.message : String(thrown);
 
-const app = new Elysia({ name: "vercel-entry" }).use(createApp());
+		// biome-ignore lint/suspicious/noConsole: startup failure must reach Vercel's function logs
+		console.error("[startup failed]", message);
+
+		const errorApp = new Elysia({ name: "vercel-entry-startup-error" }).all("*", ({ set }) => {
+			set.status = 500;
+			return { success: false, message: "Server failed to start", error: message };
+		});
+		return errorApp as unknown as Elysia;
+	}
+};
+
+const app = await buildApp();
 
 export default app;
