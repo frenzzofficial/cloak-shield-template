@@ -1,7 +1,6 @@
 import { Elysia } from "elysia";
-
-import { registerBootstrap } from "@/packages/bootstrap";
-import { registerErrorHandler } from "@/packages/middlewares/error-handler";
+import { registerBootstrap } from "../packages/bootstrap";
+import { registerErrorHandler } from "../packages/middlewares/error-handler";
 
 export const createApp = (): Elysia => {
 	const app = new Elysia({

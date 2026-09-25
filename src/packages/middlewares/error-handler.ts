@@ -1,6 +1,6 @@
 import type { Elysia } from "elysia";
-import { AppError } from "@/packages/utils/errors";
-import { logger } from "@/packages/utils/logger";
+import { AppError } from "../utils/errors";
+import { logger } from "../utils/logger";
 
 type ErrorBody = { success: false; message: string };
 

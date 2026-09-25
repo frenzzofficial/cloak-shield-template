@@ -14,11 +14,6 @@
 		"verbatimModuleSyntax": true,
 		"allowImportingTsExtensions": true,
 
-		// Path aliases
-		"paths": {
-			"@/*": ["./src/*"]
-		},
-
 		// TypeScript
 		"strict": true,
 		"noEmit": true,

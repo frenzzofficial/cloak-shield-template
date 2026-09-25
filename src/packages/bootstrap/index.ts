@@ -1,6 +1,5 @@
 import type { Elysia } from "elysia";
-
-import { appConfig } from "@/packages/configs/app.config";
+import { appConfig } from "../configs/app.config";
 
 export const registerBootstrap = (app: Elysia): void => {
 	app.get("/", ({ status }) => status(200, appConfig.site.message));
