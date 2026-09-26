@@ -1,14 +1,19 @@
 import type { Elysia } from "elysia";
-import { appConfig } from "../configs/app.config";
+import { registerHealthRoutes } from "../../app/health/health.routes";
+import { registerStaticRoutes } from "../../app/static/static.routes";
+import { registerOpenApi } from "../middlewares/openapi";
+import { registerApiRoutes } from "./registerApiRoutes";
 
 export const registerBootstrap = (app: Elysia): void => {
-	app.get("/", ({ status }) => status(200, appConfig.site.message));
+	// ── Health check ──────────────────────────────────────────────────────────────
+	registerHealthRoutes(app);
 
-	app.get("/health", ({ status }) =>
-		status(200, {
-			status: "ok",
-			message: appConfig.site.message,
-			environment: appConfig.app.NODE_ENV,
-		}),
-	);
+	// ── Static Routes (HTML, assets) ──────────────────────────────────────────────────────────────
+	registerStaticRoutes(app);
+
+	// ── OpenAPI docs — must come before the routes it documents.
+	registerOpenApi(app);
+
+	// ── Versioned API routes ──────────────────────────────────────────────────────────────
+	registerApiRoutes(app);
 };

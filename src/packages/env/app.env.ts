@@ -11,7 +11,7 @@ const serverEnvSchema = z
 		HOST: z.string().default("localhost"),
 		PORT: z.coerce.number().default(7164),
 		NODE_ENV: z.enum(["development", "production", "test"]).default("development"),
-		API_PREFIX: z.string().default("/app"),
+		API_PREFIX: z.string().default("/api"),
 		API_VERSION: z.string().default("v1"),
 
 		APP_SECRET: z
@@ -21,6 +21,9 @@ const serverEnvSchema = z
 
 		RATE_LIMIT_WINDOW_MS: z.coerce.number().default(900000),
 		RATE_LIMIT_MAX_REQUESTS: z.coerce.number().default(100),
+
+		// Rejects request bodies larger than this before they're parsed. 1 MB default.
+		BODY_LIMIT_BYTES: z.coerce.number().positive().default(1_000_000),
 
 		LOG_LEVEL: z.enum(["error", "warn", "info", "debug"]).default("info"),
 
@@ -33,6 +36,7 @@ const serverEnvSchema = z
 		ENABLE_SWAGGER: z.stringbool().default(true),
 		ENABLE_RATE_LIMIT: z.stringbool().default(true),
 		ENABLE_REQUEST_LOGGING: z.stringbool().default(true),
+		ENABLE_SECURITY_HEADERS: z.stringbool().default(true),
 
 		ENABLE_CORS_PROTECTION: z.stringbool().default(false),
 		ENABLE_CSRF_PROTECTION: z.stringbool().default(false),

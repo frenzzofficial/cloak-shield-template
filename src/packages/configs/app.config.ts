@@ -2,6 +2,8 @@ import { envAppConfig } from "../env/app.env";
 import { envClientConfig } from "../env/client.env";
 import { envPublicConfig } from "../env/public.env";
 
+const base = `${envAppConfig.API_PREFIX}/${envAppConfig.API_VERSION}`;
+
 const authRoutes = (base: string) => ({
 	base,
 	signin: "/signin",
@@ -16,6 +18,9 @@ export const appConfig = {
 		version: envPublicConfig.APP_VERSION,
 		NODE_ENV: envAppConfig.NODE_ENV,
 		domain: envPublicConfig.SITE_ORIGIN.replace(/^https?:\/\//, ""),
+		apiPrefix: envAppConfig.API_PREFIX,
+		apiVersion: envAppConfig.API_VERSION,
+		bodyLimitBytes: envAppConfig.BODY_LIMIT_BYTES,
 	},
 	site: {
 		name: envPublicConfig.APP_NAME,
@@ -26,6 +31,11 @@ export const appConfig = {
 		api: envPublicConfig.SITE_API,
 	},
 	client: envClientConfig,
+
+	// Every versioned route lives under this prefix, e.g. /api/v1
+	api: {
+		base,
+	},
 
 	auth: {
 		base: "/auth",
