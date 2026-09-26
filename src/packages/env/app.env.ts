@@ -31,17 +31,18 @@ const serverEnvSchema = z
 		// z.coerce.boolean() would turn the string "false" into true.
 		ENABLE_COMPRESSION: z.stringbool().default(true),
 		ENABLE_CORS: z.stringbool().default(true),
-		ENABLE_REDIS: z.stringbool().default(false),
-		ENABLE_SMTP: z.stringbool().default(false),
-		ENABLE_SWAGGER: z.stringbool().default(true),
 		ENABLE_RATE_LIMIT: z.stringbool().default(true),
 		ENABLE_REQUEST_LOGGING: z.stringbool().default(true),
 		ENABLE_SECURITY_HEADERS: z.stringbool().default(true),
+		ENABLE_SWAGGER: z.stringbool().default(true),
 
 		ENABLE_CORS_PROTECTION: z.stringbool().default(false),
 		ENABLE_CSRF_PROTECTION: z.stringbool().default(false),
 
-		ENABLE_EMAIL_AUTH: z.stringbool().default(true),
+		ENABLE_REDIS: z.stringbool().default(false),
+		ENABLE_SMTP: z.stringbool().default(false),
+
+		ENABLE_EMAIL_AUTH: z.stringbool().default(false),
 		ENABLE_PHONE_AUTH: z.stringbool().default(false),
 	})
 	.superRefine((env, ctx) => {
