@@ -4,6 +4,7 @@ import { getHTML, getStaticAsset } from "../../packages/utils/static-files.js";
 const STATIC_PAGES = new Map<string, string>([
 	["/", "html/index.html"],
 	["/home", "html/index.html"],
+	["/docs", "html/docs.html"],
 ]);
 
 export const registerStaticRoutes = (app: Elysia): Elysia => {
