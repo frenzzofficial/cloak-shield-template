@@ -13,7 +13,13 @@ const handleHealthCheck = async (c: Context) => {
 	return ok(c, health, health.status === "ok" ? 200 : 503);
 };
 
+const healthRouteDetail = {
+	tags: ["Health"],
+	summary: "Health check",
+	description: "Reports service status, uptime and database connectivity.",
+};
+
 export const registerHealthRoutes = (app: Elysia): void => {
-	app.get("/health", handleHealthCheck);
-	app.get(`${appConfig.app.apiPrefix}/health`, handleHealthCheck);
+	app.get("/health", handleHealthCheck, { detail: healthRouteDetail });
+	app.get(`${appConfig.app.apiPrefix}/health`, handleHealthCheck, { detail: healthRouteDetail });
 };

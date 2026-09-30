@@ -1,5 +1,4 @@
 import { Elysia } from "elysia";
-import { registerBootstrap } from "../packages/bootstrap";
 import { registerBodyLimit } from "../packages/middlewares/body-limit";
 import { registerCompression } from "../packages/middlewares/compression";
 import { registerCors } from "../packages/middlewares/cors";
@@ -9,6 +8,7 @@ import { registerNotFound } from "../packages/middlewares/not-found";
 import { registerRateLimiter } from "../packages/middlewares/rate-limiter";
 import { registerRequestLogging } from "../packages/middlewares/request-logging";
 import { registerSecurityHeaders } from "../packages/middlewares/security-headers";
+import { registerBootstrap } from "./routes";
 
 export const createApp = (): Elysia => {
 	const app = new Elysia({

@@ -4,7 +4,10 @@ import { envAppConfig } from "../env/app.env";
 
 // Sets standard security response headers (CSP, X-Frame-Options, HSTS, Referrer-Policy,
 // Permissions-Policy, ...). This is a JSON API, not an HTML app, so the CSP is locked
-// down to "nothing is allowed to load" rather than an HTML-app's usual defaults.
+// down to "nothing is allowed to load" rather than an HTML-app's usual defaults — with
+// ONE deliberate exception: the Swagger UI docs page (/openapi) loads its JS/CSS bundle
+// from unpkg.com (see openapi.ts), so it gets a relaxed CSP that allows that one CDN.
+// Every other route keeps the fully locked-down policy.
 //
 // Hand-written — no dependency. The `elysiajs-helmet` package worked perfectly under
 // `bun run` locally (Bun executes TypeScript directly), but its package.json points
@@ -18,15 +21,20 @@ import { envAppConfig } from "../env/app.env";
 // Register this early — before routes and before the rate limiter/CSRF checks — so every
 // response gets these headers, including error responses.
 const HSTS_MAX_AGE_SECONDS = 15_552_000; // 180 days
+const SWAGGER_UI_CDN = "https://unpkg.com";
 
-const buildCsp = (): string =>
+const buildCsp = (isSwaggerUiPage: boolean): string =>
 	[
 		"default-src 'none'",
-		"script-src 'self' 'unsafe-inline'",
-		"style-src 'self' 'unsafe-inline'",
+		isSwaggerUiPage
+			? `script-src 'self' 'unsafe-inline' ${SWAGGER_UI_CDN}`
+			: "script-src 'self' 'unsafe-inline'",
+		isSwaggerUiPage
+			? `style-src 'self' 'unsafe-inline' ${SWAGGER_UI_CDN}`
+			: "style-src 'self' 'unsafe-inline'",
 		"img-src 'self' data: blob:",
 		"font-src 'self'",
-		"connect-src 'self'",
+		isSwaggerUiPage ? `connect-src 'self' ${SWAGGER_UI_CDN}` : "connect-src 'self'",
 		"frame-src 'none'",
 		"object-src 'none'",
 		"base-uri 'none'",
@@ -38,7 +46,10 @@ const buildPermissionsPolicy = (): string =>
 export const registerSecurityHeaders = (app: Elysia): void => {
 	if (!envAppConfig.ENABLE_SECURITY_HEADERS) return;
 
-	app.onRequest(({ set }) => {
+	app.onRequest(({ set, request }) => {
+		const { pathname } = new URL(request.url);
+		const isSwaggerUiPage = pathname === "/openapi";
+
 		set.headers["x-frame-options"] = "DENY";
 		set.headers["x-xss-protection"] = "1; mode=block";
 		set.headers["x-content-type-options"] = "nosniff";
@@ -46,7 +57,7 @@ export const registerSecurityHeaders = (app: Elysia): void => {
 		set.headers["x-dns-prefetch-control"] = "off";
 		set.headers["cross-origin-resource-policy"] = "same-origin";
 		set.headers["cross-origin-opener-policy"] = "same-origin";
-		set.headers["content-security-policy"] = buildCsp();
+		set.headers["content-security-policy"] = buildCsp(isSwaggerUiPage);
 		set.headers["permissions-policy"] = buildPermissionsPolicy();
 
 		if (envAppConfig.NODE_ENV === "production") {

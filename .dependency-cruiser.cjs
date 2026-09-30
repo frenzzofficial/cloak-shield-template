@@ -15,7 +15,7 @@ module.exports = {
 			severity: "error",
 			from: { path: "^src/packages/env" },
 			to: {
-				path: "^src/packages/(configs|middlewares|bootstrap|utils)",
+				path: "^src/packages/(configs|middlewares|utils)",
 				pathNot: "^src/packages/utils/parse-env\\.ts$",
 			},
 		},
