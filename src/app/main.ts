@@ -8,7 +8,7 @@ import { registerErrorHandler } from "../packages/middlewares/error-handler";
 import { registerNotFound } from "../packages/middlewares/not-found";
 import { registerRateLimiter } from "../packages/middlewares/rate-limiter";
 import { registerRequestLogging } from "../packages/middlewares/request-logging";
-// import { registerSecurityHeaders } from "../packages/middlewares/security-headers";
+import { registerSecurityHeaders } from "../packages/middlewares/security-headers";
 
 export const createApp = (): Elysia => {
 	const app = new Elysia({
@@ -22,7 +22,7 @@ export const createApp = (): Elysia => {
 	registerErrorHandler(app);
 
 	// 2. Headers/limits/guards that should apply to every request, before any route runs.
-	// registerSecurityHeaders(app);
+	registerSecurityHeaders(app);
 	registerCors(app);
 	registerCompression(app);
 	registerRequestLogging(app);
