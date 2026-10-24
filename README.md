@@ -1,4 +1,5 @@
 ---
+
 name: cloak-shield
 description: A lightweight backend built with Bun, Elysia and TypeScript, deployed on Vercel.
 ---
@@ -55,7 +56,6 @@ Rules: no untyped escape hatches, explicit or implicit (use `unknown` and narrow
 ## Request pipeline
 
 `src/app/main.ts` wires everything in this order — each step only affects what's registered after it:
-
 1. **Error handler** (`middlewares/error-handler.ts`) — every thrown `AppError` and every
    framework error code (`NOT_FOUND`, `PARSE`, `VALIDATION`, ...) becomes the same
    `{ success: false, message }` JSON shape.
@@ -117,10 +117,10 @@ prefix in the same file — the two are independent.
 1. Push the repo to GitHub and import it at vercel.com/new. Vercel detects Elysia from `src/index.ts`.
 2. `vercel.json` already sets `bunVersion`, so the Bun runtime is used.
 3. In Project Settings → Environment Variables, set at least:
-    - `APP_SECRET`: unique, 32+ characters (`openssl rand -base64 48`). Production refuses to start without it.
-    - Optional: `SITE_ORIGIN`, `CLIENT_ORIGIN`, `CLIENT_ORIGINS`, `API_PREFIX`, `API_VERSION`,
-      `RATE_LIMIT_*`, `BODY_LIMIT_BYTES`, `ENABLE_SECURITY_HEADERS`, `ENABLE_CSRF_PROTECTION`.
-      See `.env.example` for the full list and defaults.
+   - `APP_SECRET`: unique, 32+ characters (`openssl rand -base64 48`). Production refuses to start without it.
+     - Optional: `SITE_ORIGIN`, `CLIENT_ORIGIN`, `CLIENT_ORIGINS`, `API_PREFIX`, `API_VERSION`,
+       `RATE_LIMIT_*`, `BODY_LIMIT_BYTES`, `ENABLE_SECURITY_HEADERS`, `ENABLE_CSRF_PROTECTION`.
+       See `.env.example` for the full list and defaults.
 4. Deploy, then open `/health` on your deployment URL.
 
 Notes: `app.listen` is not supported on Vercel, which is why the deployed entry is `src/index.ts`.
